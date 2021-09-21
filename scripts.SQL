@@ -1,6 +1,6 @@
 /*
-Created: 19/8/2021
-Modified: 20/9/2021
+Created: 8/19/2021
+Modified: 9/21/2021
 Project: Gestion de Negocios
 Model: Proyecto de Base de Datos
 Company: Universidad Nacional SRB
@@ -296,8 +296,8 @@ ALTER TABLE Familias ADD CONSTRAINT PK_Familias PRIMARY KEY (id_familia)
 -- Table CodigosBarras
 
 CREATE TABLE CodigosBarras(
-  id_producto Number NOT NULL,
-  codigobarra Varchar2(30 ) NOT NULL
+  codigobarra Varchar2(30 ) NOT NULL,
+  id_producto Number NOT NULL
 )
 ;
 
@@ -549,6 +549,20 @@ CREATE TABLE FacturasPorPagar(
 
 ALTER TABLE FacturasPorPagar ADD CONSTRAINT PK_FacturasPorPagar PRIMARY KEY (id_factura_por_pagar)
 ;
+
+-- Trigger for sequence SEQ_Negocios0 for column id_negocio in table Negocios ---------
+CREATE OR REPLACE TRIGGER ts_Negocios_SEQ_Negocios0 BEFORE INSERT
+ON Negocios FOR EACH ROW
+BEGIN
+  :new.id_negocio := SEQ_Negocios0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_Negocios_SEQ_Negocios0 AFTER UPDATE OF id_negocio
+ON Negocios FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_negocio in table Negocios as it uses sequence.');
+END;
+/
 
 -- Trigger for sequence SEQ_TipoNegocios0 for column id_tipo_negocio in table Tipos_Negocios ---------
 CREATE OR REPLACE TRIGGER ts_Tipos_Negocios_SEQ_TipoNegocios0 BEFORE INSERT
