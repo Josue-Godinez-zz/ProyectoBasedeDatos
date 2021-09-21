@@ -1,4 +1,4 @@
-/*
+﻿/*
 Created: 19/8/2021
 Modified: 20/9/2021
 Project: Gestion de Negocios
@@ -556,13 +556,13 @@ ON Tipos_Negocios FOR EACH ROW
 BEGIN
   :new.id_tipo_negocio := SEQ_TipoNegocios0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Tipos_Negocios_SEQ_TipoNegocios0 AFTER UPDATE OF id_tipo_negocio
 ON Tipos_Negocios FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_tipo_negocio in table Tipos_Negocios as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Sucursales0 for column id_sucursal in table Sucursales ---------
 CREATE OR REPLACE TRIGGER ts_Sucursales_SEQ_Sucursales0 BEFORE INSERT
@@ -570,13 +570,13 @@ ON Sucursales FOR EACH ROW
 BEGIN
   :new.id_sucursal := SEQ_Sucursales0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Sucursales_SEQ_Sucursales0 AFTER UPDATE OF id_sucursal
 ON Sucursales FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_sucursal in table Sucursales as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Productos0 for column id_producto in table Productos ---------
 CREATE OR REPLACE TRIGGER ts_Productos_SEQ_Productos0 BEFORE INSERT
@@ -584,13 +584,13 @@ ON Productos FOR EACH ROW
 BEGIN
   :new.id_producto := SEQ_Productos0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Productos_SEQ_Productos0 AFTER UPDATE OF id_producto
 ON Productos FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_producto in table Productos as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Bodegas0 for column id_bodega in table Bodegas ---------
 CREATE OR REPLACE TRIGGER ts_Bodegas_SEQ_Bodegas0 BEFORE INSERT
@@ -598,13 +598,13 @@ ON Bodegas FOR EACH ROW
 BEGIN
   :new.id_bodega := SEQ_Bodegas0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Bodegas_SEQ_Bodegas0 AFTER UPDATE OF id_bodega
 ON Bodegas FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bodega in table Bodegas as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Proveedores0 for column id_proveedor in table Proveedores ---------
 CREATE OR REPLACE TRIGGER ts_Proveedores_SEQ_Proveedores0 BEFORE INSERT
@@ -612,13 +612,13 @@ ON Proveedores FOR EACH ROW
 BEGIN
   :new.id_proveedor := SEQ_Proveedores0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Proveedores_SEQ_Proveedores0 AFTER UPDATE OF id_proveedor
 ON Proveedores FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_proveedor in table Proveedores as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Familias0 for column id_familia in table Familias ---------
 CREATE OR REPLACE TRIGGER ts_Familias_SEQ_Familias0 BEFORE INSERT
@@ -626,13 +626,13 @@ ON Familias FOR EACH ROW
 BEGIN
   :new.id_familia := SEQ_Familias0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Familias_SEQ_Familias0 AFTER UPDATE OF id_familia
 ON Familias FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_familia in table Familias as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Facturas0 for column id_factura in table Facturas ---------
 CREATE OR REPLACE TRIGGER ts_Facturas_SEQ_Facturas0 BEFORE INSERT
@@ -640,13 +640,13 @@ ON Facturas FOR EACH ROW
 BEGIN
   :new.id_factura := SEQ_Facturas0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Facturas_SEQ_Facturas0 AFTER UPDATE OF id_factura
 ON Facturas FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_factura in table Facturas as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Servicios0 for column id_servicio in table Servicios ---------
 CREATE OR REPLACE TRIGGER ts_Servicios_SEQ_Servicios0 BEFORE INSERT
@@ -654,13 +654,13 @@ ON Servicios FOR EACH ROW
 BEGIN
   :new.id_servicio := SEQ_Servicios0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Servicios_SEQ_Servicios0 AFTER UPDATE OF id_servicio
 ON Servicios FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_servicio in table Servicios as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Clientes0 for column id_cliente in table Clientes ---------
 CREATE OR REPLACE TRIGGER ts_Clientes_SEQ_Clientes0 BEFORE INSERT
@@ -668,13 +668,13 @@ ON Clientes FOR EACH ROW
 BEGIN
   :new.id_cliente := SEQ_Clientes0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Clientes_SEQ_Clientes0 AFTER UPDATE OF id_cliente
 ON Clientes FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_cliente in table Clientes as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Promociones0 for column id_promocion in table Promociones ---------
 CREATE OR REPLACE TRIGGER ts_Promociones_SEQ_Promociones0 BEFORE INSERT
@@ -682,13 +682,13 @@ ON Promociones FOR EACH ROW
 BEGIN
   :new.id_promocion := SEQ_Promociones0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Promociones_SEQ_Promociones0 AFTER UPDATE OF id_promocion
 ON Promociones FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_promocion in table Promociones as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Registros0 for column id_registro in table Registros ---------
 CREATE OR REPLACE TRIGGER ts_Registros_SEQ_Registros0 BEFORE INSERT
@@ -696,13 +696,13 @@ ON Registros FOR EACH ROW
 BEGIN
   :new.id_registro := SEQ_Registros0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Registros_SEQ_Registros0 AFTER UPDATE OF id_registro
 ON Registros FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_registro in table Registros as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_Persona0 for column id_persona in table Personas ---------
 CREATE OR REPLACE TRIGGER ts_Personas_SEQ_Persona0 BEFORE INSERT
@@ -710,13 +710,13 @@ ON Personas FOR EACH ROW
 BEGIN
   :new.id_persona := SEQ_Persona0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_Personas_SEQ_Persona0 AFTER UPDATE OF id_persona
 ON Personas FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_persona in table Personas as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_DetalleFacturas0 for column id_detalle_factura in table DetalleFactura ---------
 CREATE OR REPLACE TRIGGER ts_DetalleFactura_SEQ_DetalleFacturas0 BEFORE INSERT
@@ -724,13 +724,13 @@ ON DetalleFactura FOR EACH ROW
 BEGIN
   :new.id_detalle_factura := SEQ_DetalleFacturas0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_DetalleFactura_SEQ_DetalleFacturas0 AFTER UPDATE OF id_detalle_factura
 ON DetalleFactura FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_detalle_factura in table DetalleFactura as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_MedioPago0 for column id_medio_pago in table MedioPagos ---------
 CREATE OR REPLACE TRIGGER ts_MedioPagos_SEQ_MedioPago0 BEFORE INSERT
@@ -738,13 +738,13 @@ ON MedioPagos FOR EACH ROW
 BEGIN
   :new.id_medio_pago := SEQ_MedioPago0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_MedioPagos_SEQ_MedioPago0 AFTER UPDATE OF id_medio_pago
 ON MedioPagos FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_medio_pago in table MedioPagos as it uses sequence.');
 END;
-/
+;
 
 -- Trigger for sequence SEQ_FacturasPorPagar0 for column id_factura_por_pagar in table FacturasPorPagar ---------
 CREATE OR REPLACE TRIGGER ts_FacturasPorPagar_SEQ_FacturasPorPagar0 BEFORE INSERT
@@ -752,13 +752,13 @@ ON FacturasPorPagar FOR EACH ROW
 BEGIN
   :new.id_factura_por_pagar := SEQ_FacturasPorPagar0.nextval;
 END;
-/
+;
 CREATE OR REPLACE TRIGGER tsu_FacturasPorPagar_SEQ_FacturasPorPagar0 AFTER UPDATE OF id_factura_por_pagar
 ON FacturasPorPagar FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_factura_por_pagar in table FacturasPorPagar as it uses sequence.');
 END;
-/
+;
 
 
 -- Create foreign keys (relationships) section ------------------------------------------------- 
