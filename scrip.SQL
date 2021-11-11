@@ -695,10 +695,10 @@ ALTER TABLE CambioPrecios ADD CONSTRAINT PK_CambioPrecios PRIMARY KEY (id_cambio
 
 CREATE TABLE MovimientosInventarios(
   id_movimiento_inventario Number NOT NULL,
+  id_lote Varchar2(30 ) NOT NULL,
   nueva_ubicacion Varchar2(30 ) NOT NULL,
   vieja_ubicacion Varchar2(30 ) NOT NULL,
-  fecha_movimiento Date NOT NULL,
-  id_producto Varchar2(30 ) NOT NULL
+  fecha_movimiento Date NOT NULL
 )
 ;
 
@@ -711,6 +711,7 @@ ALTER TABLE MovimientosInventarios ADD CONSTRAINT PK_MovimientosInventarios PRIM
 
 CREATE TABLE BitacoraClientes(
   id_bitacora_cliente Number NOT NULL,
+  id_cliente Varchar2(30 ) NOT NULL,
   fecha_cambio Date NOT NULL,
   campo_modificado Varchar2(30 ) NOT NULL,
   valor_nuevo Varchar2(30 ) NOT NULL,
@@ -727,10 +728,10 @@ ALTER TABLE BitacoraClientes ADD CONSTRAINT PK_BitacoraClientes PRIMARY KEY (id_
 
 CREATE TABLE BitacoraProveedores(
   id_bitacora_proveedores Number NOT NULL,
+  id_proveedor Varchar2(30 ) NOT NULL,
   nuevo_valor Varchar2(30 ) NOT NULL,
   viejo_valor Varchar2(30 ) NOT NULL,
   fecha_cambio Date NOT NULL,
-  id_proveedor Varchar2(30 ) NOT NULL,
   campo_modificado Varchar2(30 ) NOT NULL
 )
 ;
@@ -744,6 +745,7 @@ ALTER TABLE BitacoraProveedores ADD CONSTRAINT PK_BitacoraProveedores PRIMARY KE
 
 CREATE TABLE BitacoraPromociones(
   id_bitacora_promocion Number NOT NULL,
+  id_promocion Varchar2(30 ) NOT NULL,
   valor_antiguo Varchar2(30 ) NOT NULL,
   valor_nuevo Varchar2(30 ) NOT NULL,
   campo_modificado Varchar2(30 ) NOT NULL,
@@ -760,6 +762,7 @@ ALTER TABLE BitacoraPromociones ADD CONSTRAINT PK_BitacoraPromociones PRIMARY KE
 
 CREATE TABLE BitacoraDescuentos(
   id_bitacora_descuento Number NOT NULL,
+  id_descuento Varchar2(30 ) NOT NULL,
   campo_modificado Varchar2(30 ) NOT NULL,
   valor_antiguo Varchar2(30 ) NOT NULL,
   valor_nuevo Varchar2(30 ) NOT NULL,
@@ -776,6 +779,7 @@ ALTER TABLE BitacoraDescuentos ADD CONSTRAINT PK_BitacoraDescuentos PRIMARY KEY 
 
 CREATE TABLE BitacoraFacturas(
   id_bitacora_factura Number NOT NULL,
+  id_factura Varchar2(30 ) NOT NULL,
   fecha_cambio Date NOT NULL,
   campo_modificado Varchar2(30 ) NOT NULL,
   nuevo_valor Varchar2(30 ) NOT NULL,
@@ -1039,6 +1043,7 @@ BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_accion in table Acciones as it uses sequence.');
 END;
 /
+
 -- Trigger for sequence SEQ_CambioPrecio0 for column id_cambio_precio in table CambioPrecios ---------
 CREATE OR REPLACE TRIGGER ts_CambioPrecios_SEQ_CambioPrecio0 BEFORE INSERT
 ON CambioPrecios FOR EACH ROW
@@ -1106,6 +1111,20 @@ CREATE OR REPLACE TRIGGER tsu_BitacoraPromociones_SEQ_BitacoraPromociones0 AFTER
 ON BitacoraPromociones FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bitacora_promocion in table BitacoraPromociones as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_BitacoraDescuentos0 for column id_bitacora_descuento in table BitacoraDescuentos ---------
+CREATE OR REPLACE TRIGGER ts_BitacoraDescuentos_SEQ_BitacoraDescuentos0 BEFORE INSERT
+ON BitacoraDescuentos FOR EACH ROW
+BEGIN
+  :new.id_bitacora_descuento := SEQ_BitacoraDescuentos0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_BitacoraDescuentos_SEQ_BitacoraDescuentos0 AFTER UPDATE OF id_bitacora_descuento
+ON BitacoraDescuentos FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bitacora_descuento in table BitacoraDescuentos as it uses sequence.');
 END;
 /
 
