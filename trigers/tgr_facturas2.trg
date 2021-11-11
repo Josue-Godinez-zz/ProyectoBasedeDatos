@@ -10,4 +10,10 @@ begin
      update facturasporpagar f set f.estado = 'P' where f.id_factura = :old.id_factura;  
   end if;
 end tgr_facturas2;
+
+
+/*
+Cuando una factura sea cancelada totalmente, deberá automáticamente cambiar el 
+estado de pendiente a cancelada.
+*/
 /
