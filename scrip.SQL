@@ -1,6 +1,6 @@
-/*
+﻿/*
 Created: 8/19/2021
-Modified: 9/21/2021
+Modified: 11/11/2021
 Project: Gestion de Negocios
 Model: Proyecto de Base de Datos
 Company: Universidad Nacional SRB
@@ -155,6 +155,86 @@ CREATE SEQUENCE SEQ_MedioPago0
  NOCACHE
 ;
 
+CREATE SEQUENCE SEQ_Lote0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_Accion0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_HistorialPrecio0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_CambioPrecio0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_BitacoraProveedores0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_BitacoraPromociones0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_BitacoraClientes0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_MovimientoInventario0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_BitacoraDescuentos0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_BitacoraFactura0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
 -- Create tables section -------------------------------------------------
 
 -- Table Negocios
@@ -207,30 +287,16 @@ ALTER TABLE Sucursales ADD CONSTRAINT PK_Sucursales PRIMARY KEY (id_sucursal)
 CREATE TABLE Productos(
   id_producto Number INVISIBLE NOT NULL,
   nombre Varchar2(30 ) NOT NULL,
-  codigo Varchar2(30 ) NOT NULL,
   precio_compra Number NOT NULL,
-  fecha_ingreso Date NOT NULL,
   impuesto Number NOT NULL,
-  estado Varchar2(1 ) NOT NULL,
-  cantidad_disponibles Number NOT NULL,
   id_familia Number NOT NULL,
-  id_proveedor Number NOT NULL,
-  id_bodega Number,
-  CONSTRAINT CK_Productos0 CHECK (estado in ('C','V','B'))
+  id_proveedor Number NOT NULL
 )
 ;
 
 -- Add keys for table Productos
 
 ALTER TABLE Productos ADD CONSTRAINT PK_Productos PRIMARY KEY (id_producto)
-;
-
-ALTER TABLE Productos ADD CONSTRAINT codigo UNIQUE (codigo)
-;
-
--- Table and Columns comments section
-
-COMMENT ON COLUMN Productos.estado IS 'V= Vencido, B= Bodega, C= Comprado'
 ;
 
 -- Table Bodegas
@@ -293,19 +359,6 @@ CREATE TABLE Familias(
 ALTER TABLE Familias ADD CONSTRAINT PK_Familias PRIMARY KEY (id_familia)
 ;
 
--- Table CodigosBarras
-
-CREATE TABLE CodigosBarras(
-  codigobarra Varchar2(30 ) NOT NULL,
-  id_producto Number NOT NULL
-)
-;
-
--- Add keys for table CodigosBarras
-
-ALTER TABLE CodigosBarras ADD CONSTRAINT FK_CodigosBarras PRIMARY KEY (codigobarra)
-;
-
 -- Table Facturas
 
 CREATE TABLE Facturas(
@@ -315,9 +368,11 @@ CREATE TABLE Facturas(
   referencia Varchar2(30 ) NOT NULL,
   valor_referencia Number NOT NULL,
   observacion Varchar2(30 ) NOT NULL,
+  fecha_venta_realizada Date NOT NULL,
   estado Varchar2(1 ) NOT NULL,
-  id_negocio Number NOT NULL,
-  CONSTRAINT CKC_estado_factura CHECK (estado in ('C','P','N'))
+  id_sucursal Number,
+  CONSTRAINT CK_Facturas0 CHECK (estado in ('C','P','N')),
+  CONSTRAINT CK_Facturas1 CHECK (referencia in ('Proveedores','Clientes'))
 )
 ;
 
@@ -361,7 +416,9 @@ CREATE TABLE Clientes(
   referencia Varchar2(30 ) NOT NULL,
   valor_referencia Number NOT NULL,
   estado_cliente Varchar2(1 ) NOT NULL
-        CONSTRAINT CheckConstraintA1 CHECK (estado_cliente in ('A','I'))
+        CONSTRAINT CheckConstraintA1 CHECK (estado_cliente in ('A','I')),
+  fecha_ingreso Date NOT NULL,
+  CONSTRAINT CK_Clientes0 CHECK (referencia in ('Personas','Negocios'))
 )
 ;
 
@@ -375,13 +432,16 @@ ALTER TABLE Clientes ADD CONSTRAINT PK_Clientes PRIMARY KEY (id_cliente)
 CREATE TABLE Promociones(
   id_promocion Number NOT NULL,
   id_negocio Number NOT NULL,
+  codigo_promocion Varchar2(30 ) NOT NULL,
   descuento Number NOT NULL,
   descripcion Varchar2(30 ) NOT NULL,
   id_familia Number,
   id_producto Number,
+  tipo_promocion Varchar2(1 ) NOT NULL,
   fecha_inicio Date NOT NULL,
   fecha_fin Date NOT NULL,
-  productos_minimos Number NOT NULL
+  productos_minimos Number NOT NULL,
+  CONSTRAINT CK_Promociones0 CHECK (tipo_promocion in ('P','F'))
 )
 ;
 
@@ -407,45 +467,29 @@ CREATE TABLE Descuentos(
 ALTER TABLE Descuentos ADD CONSTRAINT PK_Descuentos PRIMARY KEY (id_descuento)
 ;
 
--- Table Registros
-
-CREATE TABLE Registros(
-  id_registro Number NOT NULL,
-  fecha_cambio Date NOT NULL,
-  precio_antiguo Number NOT NULL,
-  precio_nuevo Number NOT NULL,
-  id_detalle_producto Number NOT NULL
-)
-;
-
--- Add keys for table Registros
-
-ALTER TABLE Registros ADD CONSTRAINT PK_Registros PRIMARY KEY (id_registro)
-;
-
 -- Table Personas
 
 CREATE TABLE Personas(
   id_persona Number NOT NULL,
   cedula Varchar2(30 ) NOT NULL,
   nombre Varchar2(30 ) NOT NULL,
-  apellidos Varchar2(60 ) NOT NULL,
-  tipo_persona Varchar2(1 ) NOT NULL,
+  papellido Varchar2(30 ) NOT NULL,
+  sapellido Varchar2(30 ),
+  tipo_persona Varchar2(1 ),
   estado_civil Varchar2(1 ),
   direccion_trabajo Varchar2(150 ),
   direccion_casa Varchar2(150 ),
-  telefono Varchar2(15 ) NOT NULL,
-  nacionalidad Varchar2(30 ) NOT NULL,
-  residencia Varchar2(30 ) NOT NULL,
+  telefono Varchar2(15 ),
+  nacionalidad Varchar2(30 ),
+  residencia Varchar2(30 ),
   fax Varchar2(15 ),
-  email Varchar2(150 ) NOT NULL,
-  sexo Varchar2(1 ) NOT NULL,
-  fecha_nacimiento Date NOT NULL,
+  email Varchar2(150 ),
+  sexo Varchar2(1 ),
+  fecha_nacimiento Date,
   puesto Varchar2(30 ),
   empresa Varchar2(30 ),
-  asegurado Varchar2(1 ) NOT NULL,
-  escolaridad Varchar2(50 ),
-  fecha_ingreso_cliente Date NOT NULL
+  asegurado Varchar2(1 ),
+  escolaridad Varchar2(50 )
 )
 ;
 
@@ -465,15 +509,15 @@ CREATE TABLE DetalleFactura(
   id_detalle_factura Number NOT NULL,
   referencia Varchar2(30 ) NOT NULL,
   valor_referencia Number NOT NULL,
-  cantidad Number NOT NULL,
-  valor_unitario Number NOT NULL,
-  total Number NOT NULL,
+  valor Number NOT NULL,
   subtotal Number NOT NULL,
+  total Number NOT NULL,
   descuento Number NOT NULL,
   fecha_venta Date NOT NULL,
   estado Varchar2(1 ) NOT NULL,
   id_factura Number NOT NULL,
-  CONSTRAINT CK_DetalleFactura0 CHECK (estado in ('P','D','N'))
+  CONSTRAINT CK_DetalleFactura0 CHECK (estado in ('P','D','N')),
+  CONSTRAINT CK_DetalleFactura1 CHECK (referencia in ('Productos','Servicios'))
 )
 ;
 
@@ -484,7 +528,11 @@ ALTER TABLE DetalleFactura ADD CONSTRAINT PFK_DetalleFactura PRIMARY KEY (id_det
 
 -- Table and Columns comments section
 
-COMMENT ON COLUMN DetalleFactura.estado IS 'P= Pagado, D= Devuelto, N= Ninguno'
+COMMENT ON COLUMN DetalleFactura.referencia IS 'Servicio o producto'
+;
+COMMENT ON COLUMN DetalleFactura.valor_referencia IS 'id de un producto o servicio'
+;
+COMMENT ON COLUMN DetalleFactura.estado IS 'P= Pagado, D= Devuelto, N= No pagado'
 ;
 
 -- Table MedioPagoFacturas
@@ -520,8 +568,8 @@ ALTER TABLE MedioPagos ADD CONSTRAINT PK_MedioPagos PRIMARY KEY (id_medio_pago)
 -- Table Inventarios
 
 CREATE TABLE Inventarios(
-  id_producto Number NOT NULL,
   id_sucursal Number NOT NULL,
+  id_lote Number NOT NULL,
   porcentaje_utilidad Number NOT NULL,
   porcentaje_max_descuento Number NOT NULL
 )
@@ -529,7 +577,7 @@ CREATE TABLE Inventarios(
 
 -- Add keys for table Inventarios
 
-ALTER TABLE Inventarios ADD CONSTRAINT PFK_Inventarios PRIMARY KEY (id_producto,id_sucursal)
+ALTER TABLE Inventarios ADD CONSTRAINT PFK_Inventarios PRIMARY KEY (id_sucursal,id_lote)
 ;
 
 -- Table FacturasPorPagar
@@ -539,7 +587,7 @@ CREATE TABLE FacturasPorPagar(
   monto_total Number NOT NULL,
   monto_pagado Number NOT NULL,
   estado Varchar2(1 ) NOT NULL,
-  fecha_ultimo_abono Date NOT NULL,
+  fecha_ingreso Date NOT NULL,
   id_negocio Number,
   id_factura Number
 )
@@ -548,6 +596,196 @@ CREATE TABLE FacturasPorPagar(
 -- Add keys for table FacturasPorPagar
 
 ALTER TABLE FacturasPorPagar ADD CONSTRAINT PK_FacturasPorPagar PRIMARY KEY (id_factura_por_pagar)
+;
+
+-- Table Abonos
+
+CREATE TABLE Abonos(
+  id_factura_por_pagar Number NOT NULL,
+  monto_abonado Number NOT NULL,
+  fecha_abono Date NOT NULL,
+  observacion Varchar2(50 )
+)
+;
+
+-- Add keys for table Abonos
+
+ALTER TABLE Abonos ADD CONSTRAINT PK_Abonos PRIMARY KEY (id_factura_por_pagar)
+;
+
+-- Table HistorialPrecios
+
+CREATE TABLE HistorialPrecios(
+  id_historial_precio Number NOT NULL,
+  id_producto Number NOT NULL,
+  precio_antiguo Number NOT NULL,
+  precio_nuevo Number NOT NULL,
+  fecha_cambio Date NOT NULL
+)
+;
+
+-- Add keys for table HistorialPrecios
+
+ALTER TABLE HistorialPrecios ADD CONSTRAINT PK_HistorialPrecios PRIMARY KEY (id_historial_precio)
+;
+
+-- Table CodigoBarras
+
+CREATE TABLE CodigoBarras(
+  codigo_barra Varchar2(30 ) NOT NULL,
+  id_producto Number NOT NULL
+)
+;
+
+-- Add keys for table CodigoBarras
+
+ALTER TABLE CodigoBarras ADD CONSTRAINT PK_CodigoBarras PRIMARY KEY (id_producto)
+;
+
+-- Table Lotes
+
+CREATE TABLE Lotes(
+  id_lote Number NOT NULL,
+  fecha_caduca Date NOT NULL,
+  fecha_registro Date NOT NULL,
+  estado_ubicacion Varchar2(1 ) NOT NULL,
+  cantidad_productos Number NOT NULL,
+  id_bodega Number,
+  id_producto Number
+)
+;
+
+-- Add keys for table Lotes
+
+ALTER TABLE Lotes ADD CONSTRAINT PK_Lotes PRIMARY KEY (id_lote)
+;
+
+-- Table Acciones
+
+CREATE TABLE Acciones(
+  id_accion Number NOT NULL,
+  accion Varchar2(10 ) NOT NULL,
+  id_promocion Number,
+  id_cliente Number
+)
+;
+
+-- Add keys for table Acciones
+
+ALTER TABLE Acciones ADD CONSTRAINT PK_Acciones PRIMARY KEY (id_accion)
+;
+
+-- Table CambioPrecios
+
+CREATE TABLE CambioPrecios(
+  id_cambio_precio Number NOT NULL,
+  id_producto Varchar2(30 ) NOT NULL,
+  fecha_cambio Date NOT NULL,
+  precio_antiguo Varchar2(30 ) NOT NULL,
+  precio_nuevo Varchar2(30 ) NOT NULL
+)
+;
+
+-- Add keys for table CambioPrecios
+
+ALTER TABLE CambioPrecios ADD CONSTRAINT PK_CambioPrecios PRIMARY KEY (id_cambio_precio)
+;
+
+-- Table MovimientosInventarios
+
+CREATE TABLE MovimientosInventarios(
+  id_movimiento_inventario Number NOT NULL,
+  nueva_ubicacion Varchar2(30 ) NOT NULL,
+  vieja_ubicacion Varchar2(30 ) NOT NULL,
+  fecha_movimiento Date NOT NULL,
+  id_producto Varchar2(30 ) NOT NULL
+)
+;
+
+-- Add keys for table MovimientosInventarios
+
+ALTER TABLE MovimientosInventarios ADD CONSTRAINT PK_MovimientosInventarios PRIMARY KEY (id_movimiento_inventario)
+;
+
+-- Table BitacoraClientes
+
+CREATE TABLE BitacoraClientes(
+  id_bitacora_cliente Number NOT NULL,
+  fecha_cambio Date NOT NULL,
+  campo_modificado Varchar2(30 ) NOT NULL,
+  valor_nuevo Varchar2(30 ) NOT NULL,
+  valor_antiguo Varchar2(30 ) NOT NULL
+)
+;
+
+-- Add keys for table BitacoraClientes
+
+ALTER TABLE BitacoraClientes ADD CONSTRAINT PK_BitacoraClientes PRIMARY KEY (id_bitacora_cliente)
+;
+
+-- Table BitacoraProveedores
+
+CREATE TABLE BitacoraProveedores(
+  id_bitacora_proveedores Number NOT NULL,
+  nuevo_valor Varchar2(30 ) NOT NULL,
+  viejo_valor Varchar2(30 ) NOT NULL,
+  fecha_cambio Date NOT NULL,
+  id_proveedor Varchar2(30 ) NOT NULL,
+  campo_modificado Varchar2(30 ) NOT NULL
+)
+;
+
+-- Add keys for table BitacoraProveedores
+
+ALTER TABLE BitacoraProveedores ADD CONSTRAINT PK_BitacoraProveedores PRIMARY KEY (id_bitacora_proveedores)
+;
+
+-- Table BitacoraPromociones
+
+CREATE TABLE BitacoraPromociones(
+  id_bitacora_promocion Number NOT NULL,
+  valor_antiguo Varchar2(30 ) NOT NULL,
+  valor_nuevo Varchar2(30 ) NOT NULL,
+  campo_modificado Varchar2(30 ) NOT NULL,
+  fecha_cambio Date NOT NULL
+)
+;
+
+-- Add keys for table BitacoraPromociones
+
+ALTER TABLE BitacoraPromociones ADD CONSTRAINT PK_BitacoraPromociones PRIMARY KEY (id_bitacora_promocion)
+;
+
+-- Table BitacoraDescuentos
+
+CREATE TABLE BitacoraDescuentos(
+  id_bitacora_descuento Number NOT NULL,
+  campo_modificado Varchar2(30 ) NOT NULL,
+  valor_antiguo Varchar2(30 ) NOT NULL,
+  valor_nuevo Varchar2(30 ) NOT NULL,
+  fecha_cambio Date NOT NULL
+)
+;
+
+-- Add keys for table BitacoraDescuentos
+
+ALTER TABLE BitacoraDescuentos ADD CONSTRAINT PK_BitacoraDescuentos PRIMARY KEY (id_bitacora_descuento)
+;
+
+-- Table BitacoraFacturas
+
+CREATE TABLE BitacoraFacturas(
+  id_bitacora_factura Number NOT NULL,
+  fecha_cambio Date NOT NULL,
+  campo_modificado Varchar2(30 ) NOT NULL,
+  nuevo_valor Varchar2(30 ) NOT NULL,
+  valor_antiguo Varchar2(30 ) NOT NULL
+)
+;
+
+-- Add keys for table BitacoraFacturas
+
+ALTER TABLE BitacoraFacturas ADD CONSTRAINT PK_BitacoraFacturas PRIMARY KEY (id_bitacora_factura)
 ;
 
 -- Trigger for sequence SEQ_Negocios0 for column id_negocio in table Negocios ---------
@@ -704,20 +942,6 @@ BEGIN
 END;
 /
 
--- Trigger for sequence SEQ_Registros0 for column id_registro in table Registros ---------
-CREATE OR REPLACE TRIGGER ts_Registros_SEQ_Registros0 BEFORE INSERT
-ON Registros FOR EACH ROW
-BEGIN
-  :new.id_registro := SEQ_Registros0.nextval;
-END;
-/
-CREATE OR REPLACE TRIGGER tsu_Registros_SEQ_Registros0 AFTER UPDATE OF id_registro
-ON Registros FOR EACH ROW
-BEGIN
-  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_registro in table Registros as it uses sequence.');
-END;
-/
-
 -- Trigger for sequence SEQ_Persona0 for column id_persona in table Personas ---------
 CREATE OR REPLACE TRIGGER ts_Personas_SEQ_Persona0 BEFORE INSERT
 ON Personas FOR EACH ROW
@@ -774,6 +998,131 @@ BEGIN
 END;
 /
 
+-- Trigger for sequence SEQ_HistorialPrecio0 for column id_historial_precio in table HistorialPrecios ---------
+CREATE OR REPLACE TRIGGER ts_HistorialPrecios_SEQ_HistorialPrecio0 BEFORE INSERT
+ON HistorialPrecios FOR EACH ROW
+BEGIN
+  :new.id_historial_precio := SEQ_HistorialPrecio0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_HistorialPrecios_SEQ_HistorialPrecio0 AFTER UPDATE OF id_historial_precio
+ON HistorialPrecios FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_historial_precio in table HistorialPrecios as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_Lote0 for column id_lote in table Lotes ---------
+CREATE OR REPLACE TRIGGER ts_Lotes_SEQ_Lote0 BEFORE INSERT
+ON Lotes FOR EACH ROW
+BEGIN
+  :new.id_lote := SEQ_Lote0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_Lotes_SEQ_Lote0 AFTER UPDATE OF id_lote
+ON Lotes FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_lote in table Lotes as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_Accion0 for column id_accion in table Acciones ---------
+CREATE OR REPLACE TRIGGER ts_Acciones_SEQ_Accion0 BEFORE INSERT
+ON Acciones FOR EACH ROW
+BEGIN
+  :new.id_accion := SEQ_Accion0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_Acciones_SEQ_Accion0 AFTER UPDATE OF id_accion
+ON Acciones FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_accion in table Acciones as it uses sequence.');
+END;
+/
+-- Trigger for sequence SEQ_CambioPrecio0 for column id_cambio_precio in table CambioPrecios ---------
+CREATE OR REPLACE TRIGGER ts_CambioPrecios_SEQ_CambioPrecio0 BEFORE INSERT
+ON CambioPrecios FOR EACH ROW
+BEGIN
+  :new.id_cambio_precio := SEQ_CambioPrecio0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_CambioPrecios_SEQ_CambioPrecio0 AFTER UPDATE OF id_cambio_precio
+ON CambioPrecios FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_cambio_precio in table CambioPrecios as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_MovimientoInventario0 for column id_movimiento_inventario in table MovimientosInventarios ---------
+CREATE OR REPLACE TRIGGER ts_MovimientosInventarios_SEQ_MovimientoInventario0 BEFORE INSERT
+ON MovimientosInventarios FOR EACH ROW
+BEGIN
+  :new.id_movimiento_inventario := SEQ_MovimientoInventario0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_MovimientosInventarios_SEQ_MovimientoInventario0 AFTER UPDATE OF id_movimiento_inventario
+ON MovimientosInventarios FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_movimiento_inventario in table MovimientosInventarios as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_BitacoraClientes0 for column id_bitacora_cliente in table BitacoraClientes ---------
+CREATE OR REPLACE TRIGGER ts_BitacoraClientes_SEQ_BitacoraClientes0 BEFORE INSERT
+ON BitacoraClientes FOR EACH ROW
+BEGIN
+  :new.id_bitacora_cliente := SEQ_BitacoraClientes0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_BitacoraClientes_SEQ_BitacoraClientes0 AFTER UPDATE OF id_bitacora_cliente
+ON BitacoraClientes FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bitacora_cliente in table BitacoraClientes as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_BitacoraProveedores0 for column id_bitacora_proveedores in table BitacoraProveedores ---------
+CREATE OR REPLACE TRIGGER ts_BitacoraProveedores_SEQ_BitacoraProveedores0 BEFORE INSERT
+ON BitacoraProveedores FOR EACH ROW
+BEGIN
+  :new.id_bitacora_proveedores := SEQ_BitacoraProveedores0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_BitacoraProveedores_SEQ_BitacoraProveedores0 AFTER UPDATE OF id_bitacora_proveedores
+ON BitacoraProveedores FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bitacora_proveedores in table BitacoraProveedores as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_BitacoraPromociones0 for column id_bitacora_promocion in table BitacoraPromociones ---------
+CREATE OR REPLACE TRIGGER ts_BitacoraPromociones_SEQ_BitacoraPromociones0 BEFORE INSERT
+ON BitacoraPromociones FOR EACH ROW
+BEGIN
+  :new.id_bitacora_promocion := SEQ_BitacoraPromociones0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_BitacoraPromociones_SEQ_BitacoraPromociones0 AFTER UPDATE OF id_bitacora_promocion
+ON BitacoraPromociones FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bitacora_promocion in table BitacoraPromociones as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_BitacoraFactura0 for column id_bitacora_factura in table BitacoraFacturas ---------
+CREATE OR REPLACE TRIGGER ts_BitacoraFacturas_SEQ_BitacoraFactura0 BEFORE INSERT
+ON BitacoraFacturas FOR EACH ROW
+BEGIN
+  :new.id_bitacora_factura := SEQ_BitacoraFactura0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_BitacoraFacturas_SEQ_BitacoraFactura0 AFTER UPDATE OF id_bitacora_factura
+ON BitacoraFacturas FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bitacora_factura in table BitacoraFacturas as it uses sequence.');
+END;
+/
+
 
 -- Create foreign keys (relationships) section ------------------------------------------------- 
 
@@ -793,11 +1142,6 @@ ALTER TABLE CreditoNegocios ADD CONSTRAINT PFK_Negocios_1 FOREIGN KEY (id_negoci
 
 
 ALTER TABLE CreditoNegocios ADD CONSTRAINT PFK_Proveedores_1 FOREIGN KEY (id_proveedor) REFERENCES Proveedores (id_proveedor)
-;
-
-
-
-ALTER TABLE CodigosBarras ADD CONSTRAINT FK_Productos_2 FOREIGN KEY (id_producto) REFERENCES Productos (id_producto)
 ;
 
 
@@ -832,11 +1176,6 @@ ALTER TABLE DetalleFactura ADD CONSTRAINT PFK_Facturas_1 FOREIGN KEY (id_factura
 
 
 
-ALTER TABLE Facturas ADD CONSTRAINT FK_Negocios_4 FOREIGN KEY (id_negocio) REFERENCES Negocios (id_negocio)
-;
-
-
-
 ALTER TABLE MedioPagoFacturas ADD CONSTRAINT FK_MedioPagos_1 FOREIGN KEY (id_medio_pago) REFERENCES MedioPagos (id_medio_pago)
 ;
 
@@ -867,16 +1206,6 @@ ALTER TABLE Bodegas ADD CONSTRAINT FK_Negocios_2 FOREIGN KEY (id_negocio) REFERE
 
 
 
-ALTER TABLE Productos ADD CONSTRAINT FK_Bodegas_1 FOREIGN KEY (id_bodega) REFERENCES Bodegas (id_bodega)
-;
-
-
-
-ALTER TABLE Inventarios ADD CONSTRAINT PFK_Productos_1 FOREIGN KEY (id_producto) REFERENCES Productos (id_producto)
-;
-
-
-
 ALTER TABLE Inventarios ADD CONSTRAINT PFK_Sucursales_1 FOREIGN KEY (id_sucursal) REFERENCES Sucursales (id_sucursal)
 ;
 
@@ -893,6 +1222,46 @@ ALTER TABLE FacturasPorPagar ADD CONSTRAINT FK_Facturas_2 FOREIGN KEY (id_factur
 
 
 ALTER TABLE Servicios ADD CONSTRAINT FK_Sucursales_1 FOREIGN KEY (id_sucursal) REFERENCES Sucursales (id_sucursal)
+;
+
+
+
+ALTER TABLE Abonos ADD CONSTRAINT FK_Facturas_3 FOREIGN KEY (id_factura_por_pagar) REFERENCES FacturasPorPagar (id_factura_por_pagar)
+;
+
+
+
+ALTER TABLE Facturas ADD CONSTRAINT FK_Negocios_4 FOREIGN KEY (id_sucursal) REFERENCES Sucursales (id_sucursal)
+;
+
+
+
+ALTER TABLE CodigoBarras ADD CONSTRAINT FK_productos_2 FOREIGN KEY (id_producto) REFERENCES Productos (id_producto)
+;
+
+
+
+ALTER TABLE Lotes ADD CONSTRAINT FK_Bodegas_1 FOREIGN KEY (id_bodega) REFERENCES Bodegas (id_bodega)
+;
+
+
+
+ALTER TABLE Lotes ADD CONSTRAINT FK_Lotes_1 FOREIGN KEY (id_producto) REFERENCES Productos (id_producto)
+;
+
+
+
+ALTER TABLE Inventarios ADD CONSTRAINT FK_Lotes_2 FOREIGN KEY (id_lote) REFERENCES Lotes (id_lote)
+;
+
+
+
+ALTER TABLE Acciones ADD CONSTRAINT FK_Promociones_0 FOREIGN KEY (id_promocion) REFERENCES Promociones (id_promocion)
+;
+
+
+
+ALTER TABLE Acciones ADD CONSTRAINT FK_Clientes_0 FOREIGN KEY (id_cliente) REFERENCES Clientes (id_cliente)
 ;
 
 
