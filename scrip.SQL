@@ -1,6 +1,6 @@
 ﻿/*
 Created: 8/19/2021
-Modified: 11/11/2021
+Modified: 11/12/2021
 Project: Gestion de Negocios
 Model: Proyecto de Base de Datos
 Company: Universidad Nacional SRB
@@ -369,9 +369,9 @@ CREATE TABLE Facturas(
   valor_referencia Number NOT NULL,
   observacion Varchar2(30 ) NOT NULL,
   fecha_venta_realizada Date NOT NULL,
-  estado Varchar2(1 ) NOT NULL,
+  estado Varchar2(2 ) NOT NULL,
   id_sucursal Number,
-  CONSTRAINT CK_Facturas0 CHECK (estado in ('C','P','N')),
+  CONSTRAINT CK_Facturas0 CHECK (estado in ('C','P','N','Ca')),
   CONSTRAINT CK_Facturas1 CHECK (referencia in ('Proveedores','Clientes'))
 )
 ;
@@ -387,7 +387,7 @@ COMMENT ON COLUMN Facturas.referencia IS 'Hace referencia a la tabla de proveedo
 ;
 COMMENT ON COLUMN Facturas.valor_referencia IS 'Guarda el id a quien esta referenciando'
 ;
-COMMENT ON COLUMN Facturas.estado IS 'C=Completamente Pagada, P=Parcialmente Pagada, N= No Pagada, '
+COMMENT ON COLUMN Facturas.estado IS 'C=Completamente Pagada, P=Parcialmente Pagada, N= No Pagada, Ca = Cancelada, '
 ;
 
 -- Table Servicios
@@ -516,7 +516,7 @@ CREATE TABLE DetalleFactura(
   fecha_venta Date NOT NULL,
   estado Varchar2(1 ) NOT NULL,
   id_factura Number NOT NULL,
-  CONSTRAINT CK_DetalleFactura0 CHECK (estado in ('P','D','N')),
+  CONSTRAINT CK_DetalleFactura0 CHECK (estado in ('P','D','N','C')),
   CONSTRAINT CK_DetalleFactura1 CHECK (referencia in ('Productos','Servicios'))
 )
 ;
@@ -532,7 +532,7 @@ COMMENT ON COLUMN DetalleFactura.referencia IS 'Servicio o producto'
 ;
 COMMENT ON COLUMN DetalleFactura.valor_referencia IS 'id de un producto o servicio'
 ;
-COMMENT ON COLUMN DetalleFactura.estado IS 'P= Pagado, D= Devuelto, N= No pagado'
+COMMENT ON COLUMN DetalleFactura.estado IS 'P= Pagado, D= Devuelto, N= No pagado, C=Cancelada'
 ;
 
 -- Table MedioPagoFacturas

@@ -61,3 +61,17 @@ alter table PERSONAS
     minextents 1
     maxextents unlimited
   );
+
+-- Trigger for sequence SEQ_Persona0 for column id_persona in table Personas ---------
+CREATE OR REPLACE TRIGGER ts_Personas_SEQ_Persona0 BEFORE INSERT
+ON Personas FOR EACH ROW
+BEGIN
+  :new.id_persona := SEQ_Persona0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_Personas_SEQ_Persona0 AFTER UPDATE OF id_persona
+ON Personas FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_persona in table Personas as it uses sequence.');
+END;
+/
