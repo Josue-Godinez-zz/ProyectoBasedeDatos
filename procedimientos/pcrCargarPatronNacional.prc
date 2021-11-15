@@ -22,8 +22,8 @@ begin
   PAPELLIDO := REGEXP_SUBSTR(registro, '[^,]+', 1, 7);
   SAPELLIDO := REGEXP_SUBSTR(registro, '[^,]+', 1, 8);
 
-  INSERT INTO shernandez.personas (id_persona,cedula,nombre,papellido,sapellido,tipo_persona,nacionalidad) 
-         VALUES(shernandez.seq_persona0.nextval, cedula, nombre,papellido, sapellido,'N','Costarrisence');
+  INSERT INTO shernandez.personas (cedula,nombre,papellido,sapellido,tipo_persona,nacionalidad) 
+         VALUES( cedula, nombre,papellido, sapellido,'N','Costarrisence');
   COMMIT;
   EXCEPTION
     WHEN NO_DATA_FOUND THEN

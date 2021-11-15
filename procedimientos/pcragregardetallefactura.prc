@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcragregardetallefactura(idfactura in detallefactura.id_factura%type,
+create or replace noneditionable procedure pcr_creditomaximo(idfactura in detallefactura.id_factura%type,
                                                              estado in detallefactura.estado%type,
                                                              valor in detallefactura.valor%type,
                                                              subtotal in detallefactura.subtotal%type,
@@ -24,8 +24,8 @@ begin
           msg := 'Lo sentimos ya sobrepaso el credito establecido';                      
        end if;
        if(cliente.credito_maximo > montodebido) then
-          insert into detallefactura(id_detalle_factura,referencia,valor_referencia, valor,subtotal, total,descuento,fecha_venta,estado,id_factura)
-          values(seq_detallefacturas0.nextval,referencia,valor_referente,valor,subtotal,total,descuento,sysdate,estado,idfactura);
+          insert into detallefactura(referencia,valor_referencia, valor,subtotal, total,descuento,fecha_venta,estado,id_factura)
+          values(referencia,valor_referente,valor,subtotal,total,descuento,sysdate,estado,idfactura);
           msg := 'Detalle de factura agregado correctamente';                      
 
        end if;
