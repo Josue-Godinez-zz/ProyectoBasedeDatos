@@ -1,0 +1,10 @@
+1- Ejecutar el archivo crearroles.
+2- Ejecutar el archivo crearusuarios.
+3- Agregar triger que encripta las contraseñas de parametros.
+4- Agregar a la tabla parametros los puestos correspondientes(Gerente,Cajero,Coordinador,
+   Encargado_Inventario). 
+5- Agregar a los usuarios anteriormente creados los roles creados al comienzo, por ejemplo al 
+   usuario USUARIO_GERENTE  el rol de rol_gerente y asi con los demas usuarios y roles.
+6- Ejecutar los permisos para los usuarios, asi limitandolos a las entidades y acciones que estos
+   pueden acceder y realizar.
+7- Ejecutar el archivo permisos iniciales 

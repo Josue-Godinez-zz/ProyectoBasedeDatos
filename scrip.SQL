@@ -1,6 +1,6 @@
 ﻿/*
 Created: 8/19/2021
-Modified: 11/12/2021
+Modified: 11/19/2021
 Project: Gestion de Negocios
 Model: Proyecto de Base de Datos
 Company: Universidad Nacional SRB
@@ -67,7 +67,7 @@ CREATE SEQUENCE SEQ_Clientes0
  NOCACHE
 ;
 
-CREATE SEQUENCE SEQ_Persona0
+CREATE SEQUENCE SEQ_Personas0
  INCREMENT BY 1
  START WITH 1
  NOMAXVALUE
@@ -155,7 +155,7 @@ CREATE SEQUENCE SEQ_MedioPago0
  NOCACHE
 ;
 
-CREATE SEQUENCE SEQ_Lote0
+CREATE SEQUENCE SEQ_Lotes0
  INCREMENT BY 1
  START WITH 1
  NOMAXVALUE
@@ -163,7 +163,7 @@ CREATE SEQUENCE SEQ_Lote0
  CACHE 20
 ;
 
-CREATE SEQUENCE SEQ_Accion0
+CREATE SEQUENCE SEQ_Acciones0
  INCREMENT BY 1
  START WITH 1
  NOMAXVALUE
@@ -171,7 +171,7 @@ CREATE SEQUENCE SEQ_Accion0
  CACHE 20
 ;
 
-CREATE SEQUENCE SEQ_HistorialPrecio0
+CREATE SEQUENCE SEQ_HistorialPrecios0
  INCREMENT BY 1
  START WITH 1
  NOMAXVALUE
@@ -179,7 +179,7 @@ CREATE SEQUENCE SEQ_HistorialPrecio0
  CACHE 20
 ;
 
-CREATE SEQUENCE SEQ_CambioPrecio0
+CREATE SEQUENCE SEQ_CambioPrecios0
  INCREMENT BY 1
  START WITH 1
  NOMAXVALUE
@@ -227,7 +227,23 @@ CREATE SEQUENCE SEQ_BitacoraDescuentos0
  CACHE 20
 ;
 
-CREATE SEQUENCE SEQ_BitacoraFactura0
+CREATE SEQUENCE SEQ_BitacoraFacturas0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_Empleados0
+ INCREMENT BY 1
+ START WITH 1
+ NOMAXVALUE
+ NOMINVALUE
+ CACHE 20
+;
+
+CREATE SEQUENCE SEQ_Parametros0
  INCREMENT BY 1
  START WITH 1
  NOMAXVALUE
@@ -371,6 +387,7 @@ CREATE TABLE Facturas(
   fecha_venta_realizada Date NOT NULL,
   estado Varchar2(2 ) NOT NULL,
   id_sucursal Number,
+  id_empleado Number,
   CONSTRAINT CK_Facturas0 CHECK (estado in ('C','P','N','Ca')),
   CONSTRAINT CK_Facturas1 CHECK (referencia in ('Proveedores','Clientes'))
 )
@@ -469,39 +486,68 @@ ALTER TABLE Descuentos ADD CONSTRAINT PK_Descuentos PRIMARY KEY (id_descuento)
 
 -- Table Personas
 
-CREATE TABLE Personas(
-  id_persona Number NOT NULL,
-  cedula Varchar2(30 ) NOT NULL,
-  nombre Varchar2(30 ) NOT NULL,
-  papellido Varchar2(30 ) NOT NULL,
-  sapellido Varchar2(30 ),
-  tipo_persona Varchar2(1 ),
-  estado_civil Varchar2(1 ),
-  direccion_trabajo Varchar2(150 ),
-  direccion_casa Varchar2(150 ),
-  telefono Varchar2(15 ),
-  nacionalidad Varchar2(30 ),
-  residencia Varchar2(30 ),
-  fax Varchar2(15 ),
-  email Varchar2(150 ),
-  sexo Varchar2(1 ),
-  fecha_nacimiento Date,
-  puesto Varchar2(30 ),
-  empresa Varchar2(30 ),
-  asegurado Varchar2(1 ),
-  escolaridad Varchar2(50 )
+create table PERSONAS
+(
+  id_persona        NUMBER not null,
+  cedula            VARCHAR2(30) not null,
+  nombre            VARCHAR2(30) not null,
+  papellido         VARCHAR2(30) not null,
+  sapellido         VARCHAR2(30),
+  tipo_persona      VARCHAR2(1),
+  estado_civil      VARCHAR2(1),
+  direccion_trabajo VARCHAR2(150),
+  direccion_casa    VARCHAR2(150),
+  telefono          VARCHAR2(15),
+  nacionalidad      VARCHAR2(30),
+  residencia        VARCHAR2(30),
+  fax               VARCHAR2(15),
+  email             VARCHAR2(150),
+  sexo              VARCHAR2(1),
+  fecha_nacimiento  DATE,
+  puesto            VARCHAR2(30),
+  empresa           VARCHAR2(30),
+  asegurado         VARCHAR2(1),
+  escolaridad       VARCHAR2(50)
 )
-;
-
--- Create indexes for table Personas
-
-CREATE UNIQUE INDEX IND_Id_persona ON Personas (cedula)
-;
-
--- Add keys for table Personas
-
-ALTER TABLE Personas ADD CONSTRAINT PK_id_persona PRIMARY KEY (id_persona)
-;
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate indexes 
+create unique index IND_ID_PERSONA on PERSONAS (CEDULA)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table PERSONAS
+  add constraint PK_ID_PERSONA primary key (ID_PERSONA)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 
 -- Table DetalleFactura
 
@@ -792,6 +838,35 @@ CREATE TABLE BitacoraFacturas(
 ALTER TABLE BitacoraFacturas ADD CONSTRAINT PK_BitacoraFacturas PRIMARY KEY (id_bitacora_factura)
 ;
 
+-- Table Empleados
+
+CREATE TABLE Empleados(
+  id_empleado Number NOT NULL,
+  id_negocio Number,
+  id_parametro Number,
+  id_persona Number
+)
+;
+
+-- Add keys for table Empleados
+
+ALTER TABLE Empleados ADD CONSTRAINT PK_Empleados PRIMARY KEY (id_empleado)
+;
+
+-- Table Parametros
+
+CREATE TABLE Parametros(
+  id_parametro Number NOT NULL,
+  nombre_rol Varchar2(30 ) NOT NULL,
+  clave Varchar2(30 ) NOT NULL
+)
+;
+
+-- Add keys for table Parametros
+
+ALTER TABLE Parametros ADD CONSTRAINT PK_Parametros PRIMARY KEY (id_parametro)
+;
+
 -- Trigger for sequence SEQ_Negocios0 for column id_negocio in table Negocios ---------
 CREATE OR REPLACE TRIGGER ts_Negocios_SEQ_Negocios0 BEFORE INSERT
 ON Negocios FOR EACH ROW
@@ -946,14 +1021,14 @@ BEGIN
 END;
 /
 
--- Trigger for sequence SEQ_Persona0 for column id_persona in table Personas ---------
-CREATE OR REPLACE TRIGGER ts_Personas_SEQ_Persona0 BEFORE INSERT
+-- Trigger for sequence SEQ_Personas0 for column id_persona in table Personas ---------
+CREATE OR REPLACE TRIGGER ts_Personas_SEQ_Personas0 BEFORE INSERT
 ON Personas FOR EACH ROW
 BEGIN
-  :new.id_persona := SEQ_Persona0.nextval;
+  :new.id_persona := SEQ_Personas0.nextval;
 END;
 /
-CREATE OR REPLACE TRIGGER tsu_Personas_SEQ_Persona0 AFTER UPDATE OF id_persona
+CREATE OR REPLACE TRIGGER tsu_Personas_SEQ_Personas0 AFTER UPDATE OF id_persona
 ON Personas FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_persona in table Personas as it uses sequence.');
@@ -1002,56 +1077,56 @@ BEGIN
 END;
 /
 
--- Trigger for sequence SEQ_HistorialPrecio0 for column id_historial_precio in table HistorialPrecios ---------
-CREATE OR REPLACE TRIGGER ts_HistorialPrecios_SEQ_HistorialPrecio0 BEFORE INSERT
+-- Trigger for sequence SEQ_HistorialPrecios0 for column id_historial_precio in table HistorialPrecios ---------
+CREATE OR REPLACE TRIGGER ts_HistorialPrecios_SEQ_HistorialPrecios0 BEFORE INSERT
 ON HistorialPrecios FOR EACH ROW
 BEGIN
-  :new.id_historial_precio := SEQ_HistorialPrecio0.nextval;
+  :new.id_historial_precio := SEQ_HistorialPrecios0.nextval;
 END;
 /
-CREATE OR REPLACE TRIGGER tsu_HistorialPrecios_SEQ_HistorialPrecio0 AFTER UPDATE OF id_historial_precio
+CREATE OR REPLACE TRIGGER tsu_HistorialPrecios_SEQ_HistorialPrecios0 AFTER UPDATE OF id_historial_precio
 ON HistorialPrecios FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_historial_precio in table HistorialPrecios as it uses sequence.');
 END;
 /
 
--- Trigger for sequence SEQ_Lote0 for column id_lote in table Lotes ---------
-CREATE OR REPLACE TRIGGER ts_Lotes_SEQ_Lote0 BEFORE INSERT
+-- Trigger for sequence SEQ_Lotes0 for column id_lote in table Lotes ---------
+CREATE OR REPLACE TRIGGER ts_Lotes_SEQ_Lotes0 BEFORE INSERT
 ON Lotes FOR EACH ROW
 BEGIN
-  :new.id_lote := SEQ_Lote0.nextval;
+  :new.id_lote := SEQ_Lotes0.nextval;
 END;
 /
-CREATE OR REPLACE TRIGGER tsu_Lotes_SEQ_Lote0 AFTER UPDATE OF id_lote
+CREATE OR REPLACE TRIGGER tsu_Lotes_SEQ_Lotes0 AFTER UPDATE OF id_lote
 ON Lotes FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_lote in table Lotes as it uses sequence.');
 END;
 /
 
--- Trigger for sequence SEQ_Accion0 for column id_accion in table Acciones ---------
-CREATE OR REPLACE TRIGGER ts_Acciones_SEQ_Accion0 BEFORE INSERT
+-- Trigger for sequence SEQ_Acciones0 for column id_accion in table Acciones ---------
+CREATE OR REPLACE TRIGGER ts_Acciones_SEQ_Acciones0 BEFORE INSERT
 ON Acciones FOR EACH ROW
 BEGIN
-  :new.id_accion := SEQ_Accion0.nextval;
+  :new.id_accion := SEQ_Acciones0.nextval;
 END;
 /
-CREATE OR REPLACE TRIGGER tsu_Acciones_SEQ_Accion0 AFTER UPDATE OF id_accion
+CREATE OR REPLACE TRIGGER tsu_Acciones_SEQ_Acciones0 AFTER UPDATE OF id_accion
 ON Acciones FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_accion in table Acciones as it uses sequence.');
 END;
 /
 
--- Trigger for sequence SEQ_CambioPrecio0 for column id_cambio_precio in table CambioPrecios ---------
-CREATE OR REPLACE TRIGGER ts_CambioPrecios_SEQ_CambioPrecio0 BEFORE INSERT
+-- Trigger for sequence SEQ_CambioPrecios0 for column id_cambio_precio in table CambioPrecios ---------
+CREATE OR REPLACE TRIGGER ts_CambioPrecios_SEQ_CambioPrecios0 BEFORE INSERT
 ON CambioPrecios FOR EACH ROW
 BEGIN
-  :new.id_cambio_precio := SEQ_CambioPrecio0.nextval;
+  :new.id_cambio_precio := SEQ_CambioPrecios0.nextval;
 END;
 /
-CREATE OR REPLACE TRIGGER tsu_CambioPrecios_SEQ_CambioPrecio0 AFTER UPDATE OF id_cambio_precio
+CREATE OR REPLACE TRIGGER tsu_CambioPrecios_SEQ_CambioPrecios0 AFTER UPDATE OF id_cambio_precio
 ON CambioPrecios FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_cambio_precio in table CambioPrecios as it uses sequence.');
@@ -1128,17 +1203,45 @@ BEGIN
 END;
 /
 
--- Trigger for sequence SEQ_BitacoraFactura0 for column id_bitacora_factura in table BitacoraFacturas ---------
-CREATE OR REPLACE TRIGGER ts_BitacoraFacturas_SEQ_BitacoraFactura0 BEFORE INSERT
+-- Trigger for sequence SEQ_BitacoraFacturas0 for column id_bitacora_factura in table BitacoraFacturas ---------
+CREATE OR REPLACE TRIGGER ts_BitacoraFacturas_SEQ_BitacoraFacturas0 BEFORE INSERT
 ON BitacoraFacturas FOR EACH ROW
 BEGIN
-  :new.id_bitacora_factura := SEQ_BitacoraFactura0.nextval;
+  :new.id_bitacora_factura := SEQ_BitacoraFacturas0.nextval;
 END;
 /
-CREATE OR REPLACE TRIGGER tsu_BitacoraFacturas_SEQ_BitacoraFactura0 AFTER UPDATE OF id_bitacora_factura
+CREATE OR REPLACE TRIGGER tsu_BitacoraFacturas_SEQ_BitacoraFacturas0 AFTER UPDATE OF id_bitacora_factura
 ON BitacoraFacturas FOR EACH ROW
 BEGIN
   RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_bitacora_factura in table BitacoraFacturas as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_Empleados0 for column id_empleado in table Empleados ---------
+CREATE OR REPLACE TRIGGER ts_Empleados_SEQ_Empleados0 BEFORE INSERT
+ON Empleados FOR EACH ROW
+BEGIN
+  :new.id_empleado := SEQ_Empleados0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_Empleados_SEQ_Empleados0 AFTER UPDATE OF id_empleado
+ON Empleados FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_empleado in table Empleados as it uses sequence.');
+END;
+/
+
+-- Trigger for sequence SEQ_Parametros0 for column id_parametro in table Parametros ---------
+CREATE OR REPLACE TRIGGER ts_Parametros_SEQ_Parametros0 BEFORE INSERT
+ON Parametros FOR EACH ROW
+BEGIN
+  :new.id_parametro := SEQ_Parametros0.nextval;
+END;
+/
+CREATE OR REPLACE TRIGGER tsu_Parametros_SEQ_Parametros0 AFTER UPDATE OF id_parametro
+ON Parametros FOR EACH ROW
+BEGIN
+  RAISE_APPLICATION_ERROR(-20010,'Cannot update column id_parametro in table Parametros as it uses sequence.');
 END;
 /
 
@@ -1281,6 +1384,26 @@ ALTER TABLE Acciones ADD CONSTRAINT FK_Promociones_0 FOREIGN KEY (id_promocion) 
 
 
 ALTER TABLE Acciones ADD CONSTRAINT FK_Clientes_0 FOREIGN KEY (id_cliente) REFERENCES Clientes (id_cliente)
+;
+
+
+
+ALTER TABLE Empleados ADD CONSTRAINT FK_Negocios_8 FOREIGN KEY (id_negocio) REFERENCES Negocios (id_negocio)
+;
+
+
+
+ALTER TABLE Empleados ADD CONSTRAINT FK_Parametros_0 FOREIGN KEY (id_parametro) REFERENCES Parametros (id_parametro)
+;
+
+
+
+ALTER TABLE Empleados ADD CONSTRAINT FK_Personas_0 FOREIGN KEY (id_persona) REFERENCES Personas (id_persona)
+;
+
+
+
+ALTER TABLE Facturas ADD CONSTRAINT FK_Empleados_0 FOREIGN KEY (id_empleado) REFERENCES Empleados (id_empleado)
 ;
 
 
