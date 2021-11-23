@@ -1,4 +1,4 @@
-create or replace procedure pcr_cambio_precio(idproducto in productos.id_producto%type, precio in number) is
+create or replace procedure prc_cambio_precio(idproducto in productos.id_producto%type, precio in number) is
 producto productos%rowtype;
 begin
   select p.* into producto from productos p where p.id_producto = idproducto;
@@ -8,5 +8,5 @@ begin
        update productos p set p.precio_compra = precio where p.id_producto = idproducto;                     
   end if;
   
-end pcr_cambio_precio;
+end prc_cambio_precio;
 /

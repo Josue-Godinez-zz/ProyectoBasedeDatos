@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrproductosporvencer(idnegocio in negocios.id_negocio%type, listaXsemana out varchar2, listaXbodega out varchar2) is
+create or replace procedure prc_productosporvencer(idnegocio in negocios.id_negocio%type, listaXsemana out varchar2, listaXbodega out varchar2) is
  
  CURSOR productosMeses is
         select p.* from lotes p join bodegas b on b.id_bodega = p.id_bodega where p.fecha_registro < ADD_MONTHS(sysdate,  -6) and p.estado_ubicacion like 'B' and b.id_negocio = idnegocio; 
@@ -14,5 +14,5 @@ begin
   FOR n IN productosSemana LOOP
       listaXsemana := concat(listaXsemana, n.id_lote);
   end loop;  
-end pcrproductosporvencer;
+end prc_productosporvencer;
 /

@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrnotificacion01(idcliente in clientes.id_cliente%type) is
+create or replace procedure prc_notificacion01(idcliente in clientes.id_cliente%type) is
   montodebido number;
   msg varchar2(9000); 
   negocioEnvia negocios%rowtype;
@@ -21,7 +21,7 @@ begin
      montodebido := montodebido + n.monto_total;
    end loop;
    msg:='';
-   if((cliente.credito_maximo*0.85) >= montodebido)then
+   if((cliente.credito_maximo*0.85) <= montodebido)then
       msg:= 'De parte de ';
       msg:= concat(msg,negocioEnvia.Nombre_Negocio || crlf);                              
       msg:= 'Se le informa que ya cuenta con un 85% o mas de su credito disponible.';
@@ -31,5 +31,5 @@ begin
            sys.prc_correos(negocio.correo_negocio,msg);      
       end if;
    end if;           
-end pcrnotificacion01;
+end prc_notificacion01;
 /

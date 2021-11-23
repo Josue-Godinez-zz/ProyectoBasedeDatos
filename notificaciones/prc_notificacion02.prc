@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrnotificacion02(idnegocio in clientes.id_negocio%type) is
+create or replace procedure prc_notificacion02(idnegocio in clientes.id_negocio%type) is
 persona personas%rowtype;
 msg varchar(9000);
 bandera boolean;
@@ -24,5 +24,5 @@ begin
   if(bandera)then
       sys.prc_correos(persona.email,msg);
   end if;    
-end pcrnotificacion02;
+end prc_notificacion02;
 /

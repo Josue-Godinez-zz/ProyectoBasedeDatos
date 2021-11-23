@@ -1,4 +1,4 @@
-create or replace procedure pcrnotificacion06(idnegocio in negocios.id_negocio%type) is
+create or replace procedure prc_notificacion06(idnegocio in negocios.id_negocio%type) is
 cursor cierregeneral is
       select n.id_negocio,n.nombre_negocio,
       (select count(f.id_factura) from sucursales s  
@@ -42,9 +42,9 @@ begin
     info := concat(info,n.fecha || crlf);
     msg:=concat(msg,info || crlf);
     msg := concat(msg,fnnotificacion06(n.id_negocio) || crlf);
-    pcrenviarcorreo(persona1.email,msg);
-    pcrenviarcorreo(persona2.email,msg);
+    prc_enviarcorreo(persona1.email,msg);
+    prc_enviarcorreo(persona2.email,msg);
     msg:='';
   end loop;
-end pcrnotificacion06;
+end prc_notificacion06;
 /

@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrnotificacion09(idnegocio in shernandez.negocios.id_negocio%type) is
+create or replace procedure prc_notificacion09(idnegocio in shernandez.negocios.id_negocio%type) is
 indices_malos varchar(1000);
   cursor indicemalo is SELECT OWNER, OBJECT_NAME, OBJECT_TYPE FROM DBA_OBJECTS
   WHERE OWNER NOT IN ('SYS','SYSTEM') AND STATUS = 'INVALID' AND OBJECT_TYPE = 'INDEX'
@@ -30,5 +30,5 @@ begin
       sys.prc_correos(persona2.email,msg);
   end if; 
 
-end pcrnotificacion09;
+end prc_notificacion09;
 /

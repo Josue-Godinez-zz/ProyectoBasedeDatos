@@ -1,4 +1,4 @@
-create or replace procedure pcr_devolucion(idfactura in detallefactura.id_factura%type, idproducto in productos.id_producto%type) is
+create or replace procedure prc_devolucion(idfactura in detallefactura.id_factura%type, idproducto in productos.id_producto%type) is
 cursor detalle is
        select d.* from detallefactura d where d.id_factura = idfactura and d.valor_referencia = idproducto 
        and d.referencia like 'Productos';
@@ -11,5 +11,5 @@ begin
       bandera:= true;                  
     end if;
   end loop;
-end pcr_devolucion;
+end prc_devolucion;
 /

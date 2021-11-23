@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrnotificacion05(idnegocio in negocios.id_negocio%type) is
+create or replace procedure prc_notificacion05(idnegocio in negocios.id_negocio%type) is
     cursor productosvencidos is
        select t.id_lote,p.nombre,(t.cantidad_productos*p.precio_compra) as costo,t.cantidad_productos,p.precio_compra,t.estado_ubicacion 
        from LOTES t join productos p on p.id_producto=t.id_producto join bodegas b on b.id_bodega = t.id_bodega join negocios n on n.id_negocio = b.id_negocio 
@@ -36,5 +36,5 @@ begin
   if(bandera)then
       sys.prc_correos(persona.email,msg);
   end if;
-end pcrnotificacion05;
+end prc_notificacion05;
 /

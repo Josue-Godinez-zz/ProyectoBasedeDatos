@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrnotificacion08(idnegocio in shernandez.negocios.id_negocio%type) is
+create or replace procedure prc_notificacion08(idnegocio in shernandez.negocios.id_negocio%type) is
 cursor invalidos is
     SELECT OWNER, OBJECT_NAME, OBJECT_TYPE
     FROM DBA_OBJECTS
@@ -30,5 +30,5 @@ begin
       sys.prc_correos(persona2.email,msg);
   end if;    
       
-end pcrnotificacion08;
+end prc_notificacion08;
 /

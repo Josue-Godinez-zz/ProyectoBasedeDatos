@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrnotificacion04(idnegocio in negocios.id_negocio%type) is
+create or replace procedure prc_notificacion04(idnegocio in negocios.id_negocio%type) is
 CURSOR clientessinabonos is
   select p.* from personas p join clientes c on c.valor_referencia = p.id_persona join facturas f on f.valor_referencia = c.id_cliente 
   join FACTURASPORPAGAR t on  t.id_factura = f.id_factura where t.fecha_ingreso < ADD_MONTHS(sysdate,  -1) 
@@ -56,5 +56,5 @@ begin
       sys.prc_correos(persona1.email,msg);
       sys.prc_correos(persona2.email,msg);
   end if;
-end pcrnotificacion04;
+end prc_notificacion04;
 /

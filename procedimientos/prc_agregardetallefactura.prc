@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcragregardetallefactura(idfactura in detallefactura.id_factura%type,
+create or replace noneditionable procedure prc_agregardetallefactura(idfactura in detallefactura.id_factura%type,
                                                              estado in detallefactura.estado%type,
                                                              valor in detallefactura.valor%type,
                                                              descuento in detallefactura.descuento%type,
@@ -64,7 +64,7 @@ begin
                  values(referencia,valor_referente,valor,montopagar,montofinal,descuento,sysdate,estado,idfactura);
                  msg := 'Detalle de factura agregado correctamente';            
            end if;
-          pcrnotificacion01(cliente.id_cliente);
+          prc_notificacion01(cliente.id_cliente);
         end if;
         if(factura.referencia = 'Proveedores')then
             select p.* into proveedor from proveedores p where p.id_proveedor = idclienteoprovedor;
@@ -95,7 +95,7 @@ begin
                   values(referencia,valor_referente,valor,montopagar,montofinal,descuento,sysdate,estado,idfactura);
                   msg := 'Detalle de factura agregado correctamente';
                   if(referencia = 'Productos')then
-                      pcr_cambio_precio(valor_referente,montofinal); 
+                      prc_cambio_precio(valor_referente,montofinal); 
                   end if;                                                  
                end if;
             else
@@ -103,12 +103,12 @@ begin
                        values(referencia,valor_referente,valor,montopagar,montofinal,descuento,sysdate,estado,idfactura);
                 msg := 'Detalle de factura agregado correctamente'; 
                   if(referencia = 'Productos')then
-                      pcr_cambio_precio(valor_referente,montofinal); 
+                      prc_cambio_precio(valor_referente,montofinal); 
                   end if;  
             end if; 
-            pcrnotificacion03(negocio.id_negocio );           
+            prc_notificacion03(negocio.id_negocio );           
         end if;
         
        commit;
-end pcragregardetallefactura;
+end prc_agregardetallefactura;
 /

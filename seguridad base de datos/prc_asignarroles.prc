@@ -1,4 +1,4 @@
-create or replace procedure pcrasignarroles AUTHID CURRENT_USER is
+create or replace procedure prc_asignarroles AUTHID CURRENT_USER is
   clave varchar(500);
   decencriptado varchar2(2000);
 begin
@@ -69,5 +69,5 @@ begin
     dbms_session.set_role('ROL_ENCARGADO_INVENTARIO IDENTIFIED BY ' || decencriptado);
   
   END IF;
-end pcrasignarroles;
+end prc_asignarroles;
 /

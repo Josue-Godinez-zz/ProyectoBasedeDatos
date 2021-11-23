@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrCargarPatronNacional is
+create or replace procedure prc_CargarPatronNacional is
  
  archivo UTL_FILE.FILE_TYPE;
  registro VARCHAR2 (1000);
@@ -33,5 +33,5 @@ begin
  END IF;
  UTL_FILE.FCLOSE(archivo);
 
-end pcrCargarPatronNacional;
+end prc_CargarPatronNacional;
 /

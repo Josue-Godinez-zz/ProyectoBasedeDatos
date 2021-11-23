@@ -1,4 +1,4 @@
-create or replace noneditionable procedure pcrabonos(idfactura in facturas.id_factura%type,monto in number,observacion varchar2, msg out varchar2) is
+create or replace procedure prc_abonos(idfactura in facturas.id_factura%type,monto in number,observacion varchar2, msg out varchar2) is
 facturaporpagar facturasporpagar%rowtype;
 montopagado number;
 montodebido number;
@@ -20,5 +20,5 @@ begin
   end if;    
   msg := 'Abono realizado correctamnete';
   commit;                      
-end pcrabonos;
+end prc_abonos;
 /

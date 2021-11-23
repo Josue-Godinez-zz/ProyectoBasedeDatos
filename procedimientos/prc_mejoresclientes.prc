@@ -1,4 +1,4 @@
-create or replace procedure pcrmejoresclientes(idnegocio in negocios.id_negocio%type) is
+create or replace procedure prc_mejoresclientes(idnegocio in negocios.id_negocio%type) is
    cliente clientes%rowtype;
    msg varchar2(9000);
    persona personas%rowtype;    
@@ -37,8 +37,8 @@ begin
        update clientes ce set ce.credito_favor = ce.credito_favor + 100000 where ce.id_cliente = cliente.id_cliente;
        commit;
    END LOOP;
-   pcrenviarcorreo(coordinador.email,msg);
-end pcrmejoresclientes;
+   prc_enviarcorreo(coordinador.email,msg);
+end prc_mejoresclientes;
 
 /*por hacer notificar*/
 /
