@@ -21,7 +21,7 @@ begin
      montodebido := montodebido + n.monto_total;
    end loop;
    msg:='';
-   if((cliente.credito_maximo*0.85) >= montodebido)then
+   if((cliente.credito_maximo*0.85) <= montodebido)then
       msg:= 'De parte de ';
       msg:= concat(msg,negocioEnvia.Nombre_Negocio || crlf);                              
       msg:= 'Se le informa que ya cuenta con un 85% o mas de su credito disponible.';

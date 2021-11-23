@@ -1,6 +1,6 @@
 ﻿/*
 Created: 8/19/2021
-Modified: 11/19/2021
+Modified: 11/22/2021
 Project: Gestion de Negocios
 Model: Proyecto de Base de Datos
 Company: Universidad Nacional SRB
@@ -259,7 +259,8 @@ CREATE TABLE Negocios(
   id_negocio Number NOT NULL,
   id_tipo_negocio Number NOT NULL,
   nombre_negocio Varchar2(30 ) NOT NULL,
-  cedula_juridica_neg Varchar2(30 ) NOT NULL
+  cedula_juridica_neg Varchar2(30 ) NOT NULL,
+  correo_negocio Varchar2(60 ) NOT NULL
 )
 ;
 
@@ -301,7 +302,7 @@ ALTER TABLE Sucursales ADD CONSTRAINT PK_Sucursales PRIMARY KEY (id_sucursal)
 -- Table Productos
 
 CREATE TABLE Productos(
-  id_producto Number INVISIBLE NOT NULL,
+  id_producto Number NOT NULL,
   nombre Varchar2(30 ) NOT NULL,
   precio_compra Number NOT NULL,
   impuesto Number NOT NULL,
@@ -473,8 +474,8 @@ CREATE TABLE Descuentos(
   id_descuento Number NOT NULL,
   id_familia Number,
   id_proveedor Number,
-  fecha_inicio Number NOT NULL,
-  fecha_vencimiento Number NOT NULL,
+  fecha_inicio Date NOT NULL,
+  fecha_vencimiento Date NOT NULL,
   descuento Number NOT NULL
 )
 ;
@@ -654,11 +655,6 @@ CREATE TABLE Abonos(
 )
 ;
 
--- Add keys for table Abonos
-
-ALTER TABLE Abonos ADD CONSTRAINT PK_Abonos PRIMARY KEY (id_factura_por_pagar)
-;
-
 -- Table HistorialPrecios
 
 CREATE TABLE HistorialPrecios(
@@ -681,11 +677,6 @@ CREATE TABLE CodigoBarras(
   codigo_barra Varchar2(30 ) NOT NULL,
   id_producto Number NOT NULL
 )
-;
-
--- Add keys for table CodigoBarras
-
-ALTER TABLE CodigoBarras ADD CONSTRAINT PK_CodigoBarras PRIMARY KEY (id_producto)
 ;
 
 -- Table Lotes
